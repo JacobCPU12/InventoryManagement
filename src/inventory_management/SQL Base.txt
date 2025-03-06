@@ -1,0 +1,35 @@
+        // Le base - don't remove yet!
+        /*try
+        (
+          // This utilises a custom SQLite plugin to connect to a locally stored database file.
+          Connection connection = DriverManager.getConnection("jdbc:sqlite:InvtMgmt.db");
+          Statement statement = connection.createStatement();
+        )
+        {
+          statement.setQueryTimeout(30);  // set timeout to 30 sec.
+
+          //statement.executeUpdate("drop table if exists person");
+          //statement.executeUpdate("create table person (id integer, name string)");
+          
+          //statement.executeUpdate("insert into person values('" + name + "')");
+          
+          String grabAllItems = "SELECT * FROM items";
+          PreparedStatement ps = connection.prepareStatement(grabAllItems);
+          ResultSet rs = ps.executeQuery();
+          while(rs.next())
+          {
+            // read the result set
+            System.out.println("id = " + rs.getInt("id"));
+            System.out.println("description = " + rs.getString("description"));
+            System.out.println("unitPrice = " + rs.getInt("unitPrice"));
+            System.out.println("qtyInStock = " + rs.getInt("qtyInStock"));
+            System.out.println("totalPrice = " + rs.getInt("totalPrice"));
+          }
+        }
+        catch(SQLException e)
+        {
+          // if the error message is "out of memory",
+          // it probably means no database file is found
+          e.printStackTrace(System.err);
+        }
+        */
