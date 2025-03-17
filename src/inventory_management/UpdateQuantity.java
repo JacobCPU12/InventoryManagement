@@ -73,7 +73,7 @@ public class UpdateQuantity {
 	          int productID = input.nextInt();
 	          
 	          // SQL query to get the selected product details
-	          String selectProduct = "SELECT description, unitPrice, totalPrice FROM items WHERE id = ?";
+	          String selectProduct = "SELECT description, unitPrice, totalPrice, qtyInStock FROM items WHERE id = ?";
 	          PreparedStatement psProduct = connection.prepareStatement(selectProduct);
 	          // Set the ID of product we need to retrieve to the one the user entered.
 	          psProduct.setInt(1, productID);
@@ -83,6 +83,7 @@ public class UpdateQuantity {
 	          double unitPrice = 0;
 	          double totalPrice = 0;
 	          String productName = "";
+	          int currentQuantity = 0;
 	
 	          // Check if product exists and retrieve values
 	          // This also prints out the current values to the user, for simplicity.
@@ -90,6 +91,7 @@ public class UpdateQuantity {
 	              unitPrice = rsProduct.getDouble("unitPrice");
 	              totalPrice = rsProduct.getDouble("totalPrice");
 	              productName = rsProduct.getString("description");
+	              currentQuantity = rsProduct.getInt("qtyInStock");
 	
 	              System.out.printf("\nSelected Product ID: %d%n", productID);
 	              System.out.printf("Unit Price: £%.2f%n", unitPrice);
@@ -125,10 +127,36 @@ public class UpdateQuantity {
 	        	  System.out.println("Product quantity has been updated successfully!");
 	        	  connection.close();
 	        	  
-	        	  // Now the quantity has been updated, we still need to add a new row in the transactions table
-	        	  // to show that an action has taken place.
-	        	  //Transactions.update("updated", productName, unitPrice, newQuantity);
-	        	  Transactions.updateQuantity(productName, unitPrice, newQuantity, 0, false);
+	        	  // Before the transaction is recorded, we need to ask the user
+	        	  // whether or not this was part of a sale
+	        	  System.out.print("Are you updating the quantity for a sale? (1 for yes, 2 for no): ");
+	      		try {
+		   			 int selection = input.nextInt();
+		   			 // Simple switch statement, replacement for an if, else if and else statement.
+		   			 // This has been put inside of a try/catch statement so we can catch InputMismatch errors
+		   			 // If the user does enter in a letter instead of a number
+		   			 switch (selection) {
+		   			  	  	case 1:
+		   		        	  // Now the quantity has been updated, we still need to add a new row in the transactions table
+		   		        	  // to show that an action has taken place.
+		   		        	  Transactions.updateQuantity(productName, unitPrice, newQuantity, currentQuantity, true);
+		   			  	  	case 2:
+		   		        	  Transactions.updateQuantity(productName, unitPrice, newQuantity, 0, false);
+		   			  	  	  break;
+		   			  	  	default:
+	   			  	  		  System.out.println("\nYou have not entered a valid option, going back to main menu!");
+		   			  	  	  TimeUnit.SECONDS.sleep(2);
+				  	  		  Store.MainMenu();
+	   			  	  		  break;
+		   			  	  }
+		   		}
+		   		// If the user enters letters instead of a number, the exception is caught
+		   		// instead of the programme crashing altogether.
+		   		catch (InputMismatchException e) {
+		   			 e.printStackTrace(System.err);
+		   			 System.out.println("\n An error occurred, letter(s) were entered instead of a number. Going back to main menu.");
+		   			 Store.MainMenu();
+		   		}
 	        	  
 	        	  // Now that the transactions has been logged, finally ask the user,
 	        	  // if they want to go back to the main menu.

@@ -100,7 +100,7 @@ public class NewItem {
         
 		} else if (type == "graphical") {
 			//double totalPrice = price * quantity;
-			double totalPrice = UpdateQuantity.calculateTotalPrice(price, quantity);
+			double totalPrice = calculateTotalPrice(price, quantity);
 			
 			// The following try/catch statement is purely for connecting to the local DB file
 	        try
@@ -147,5 +147,12 @@ public class NewItem {
 	          e.printStackTrace(System.err);
 	        }
 		}
+	}
+	
+	// This method takes the new quantity supplied by the user,
+	// and multiples that number against the unit price already defined in the table.
+	// This will return the new total price to put back into the table.
+	public static double calculateTotalPrice(double a, double b) {
+		return a*b;
 	}
 }

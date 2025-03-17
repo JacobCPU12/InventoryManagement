@@ -1,7 +1,6 @@
 package inventory_management;
 
 import javafx.beans.property.*;
-import java.sql.Date;
 
 public class GUI_Transaction {
     private final IntegerProperty id;

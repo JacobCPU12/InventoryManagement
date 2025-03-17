@@ -1,17 +1,13 @@
 package inventory_management;
 
-import java.util.InputMismatchException;
 // Import the Scanner class so we can get user input for the name, quantity in stock & price
 import java.util.Scanner;
-import java.util.concurrent.TimeUnit;
 // Import all the necessary classes for an SQL connection
 import java.sql.*;
+// Also import the time package, LocalDate and DateTimeFormatter class
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 
-////
-// TODO finish this when get home
-////
 public class TransactionReport {
 	
 	// "throws InterruptedException" is included so we can refer back to other classes.
@@ -79,15 +75,9 @@ public class TransactionReport {
 	          // it probably means no database file is found
 	          e.printStackTrace(System.err);
 	        }
-		} else if (type == "graphical") {
-			
+	        
+	        // Close the input variable
+	        input.close();
 		}
-	}
-	
-	// This method takes the new quantity supplied by the user,
-	// and multiples that number against the unit price already defined in the table.
-	// This will return the new total price to put back into the table.
-	public static double calculateTotalPrice(double a, double b) {
-		return a*b;
 	}
 }

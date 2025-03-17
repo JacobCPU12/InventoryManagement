@@ -3,7 +3,6 @@ package inventory_management;
 import java.util.InputMismatchException;
 // Import the Scanner class so we can get user input for the name, quantity in stock & price
 import java.util.Scanner;
-import java.util.concurrent.TimeUnit;
 // Import all the necessary classes for an SQL connection
 import java.sql.*;
 
@@ -202,12 +201,5 @@ public class DeleteItem {
 	          e.printStackTrace(System.err);
 	        }
 		}
-	}
-	
-	// This method takes the new quantity supplied by the user,
-	// and multiples that number against the unit price already defined in the table.
-	// This will return the new total price to put back into the table.
-	public static double calculateTotalPrice(double a, double b) {
-		return a*b;
 	}
 }

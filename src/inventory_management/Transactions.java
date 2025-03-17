@@ -11,38 +11,6 @@ public class Transactions {
 	public static void main(String[] args) throws InterruptedException {
 		
 	}
-
-	/*public static void update(String type, String productName, double price, int quantity) throws InterruptedException {
-		// This class does the following
-
-		
-		// The following try/catch statement is purely for connecting to the local DB file
-        try
-        (
-          // This utilises a custom SQLite plugin to connect to a locally stored database file.
-          Connection connection = DriverManager.getConnection("jdbc:sqlite:InvtMgmt.db");
-          Statement statement = connection.createStatement();
-        )
-        {
-          statement.setQueryTimeout(30);  // set timeout to 30 sec.
-          
-          // This statement inserts a new row inside of the transaction table
-          // so we can keep an update of everything that happens inside of the system.
-          String grabAllItems = "INSERT INTO transactions (description, stockRemaining, transactionType) VALUES (?, ?, ?)";
-          PreparedStatement ps = connection.prepareStatement(grabAllItems);
-          ps.setString(1, productName);
-          //ps.setDouble(2, price);
-          ps.setInt(2, quantity);
-          ps.setString(3, type);
-          ps.executeUpdate();
-        }
-        catch(SQLException e)
-        {
-          // if the error message is "out of memory",
-          // it probably means no database file is found
-          e.printStackTrace(System.err);
-        }
-	}*/
 	
 	public static void newItem(String type, String productName, double price, int quantity) throws InterruptedException {
 		// This class does the following
@@ -160,19 +128,6 @@ public class Transactions {
           System.out.println();
           System.out.println("Transaction has been logged.");
           System.out.println();
-          
-          /*while(rs.next())
-          {
-            // read the result set
-        	System.out.println();
-            System.out.println(" Product ID = " + rs.getInt("id"));
-            System.out.println(" Description = " + rs.getString("description"));
-            System.out.println(" Price = £" + rs.getDouble("unitPrice"));
-            System.out.println(" Quantity in Stock = " + rs.getInt("qtyInStock"));
-            System.out.println(" Total Value = £" + rs.getDouble("totalPrice"));
-            // Print a blank line to separate each found product.
-            System.out.println();
-          }*/
         }
         catch(SQLException e)
         {

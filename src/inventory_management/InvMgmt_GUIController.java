@@ -50,7 +50,7 @@ public class InvMgmt_GUIController {
     @FXML
     private TableColumn<GUI_Transaction, String> transactionsTypeCol;
     @FXML
-    private TableColumn<GUI_Transaction, String> transactionsDateCol;	
+    private TableColumn<GUI_Transaction, String> transactionsDateCol;
 	@FXML
 	private Label updateLbl;
 	@FXML
@@ -89,7 +89,15 @@ public class InvMgmt_GUIController {
 	private Label delItemIDLbl;
 	@FXML
 	private Button delItemBtn;
-
+	@FXML
+	private Label searchLbl;
+	@FXML
+	private TextField searchBox;
+	@FXML
+	private Button searchBtn;
+	@FXML
+	private Label msgLabel;
+	
 	// User's selection set as a variable, must be declared first
 	static boolean saleSelection;
 	// Variable set as to whether or not the user selects Yes or No
@@ -166,6 +174,62 @@ public class InvMgmt_GUIController {
 		reloadTransactionsTableData();
 		reloadItemsTableData();
 	}
+	
+	// Event Listener on Button[#searchBtn].onAction
+	@FXML
+	public void searchAction(ActionEvent event) {
+	    // Define the variables we'll need for the SQL statement
+	    String searchQuery = searchBox.getText();
+	    System.out.println("[INFO] Search triggered with query: '" + searchQuery + "'");
+
+	    // If there is nothing inside the search box
+	    // clear the table and show all items instead.
+	    if (searchQuery.isEmpty()) {
+	        System.out.println("[INFO] Search box empty. Reloading all items.");
+	        reloadItemsTableData();  // Reload all items from the database
+	    } else {
+	        itemsData.clear();  // Clear the existing data before adding new data from the search
+	        String url = "jdbc:sqlite:InvtMgmt.db";
+
+	        try (Connection connection = DriverManager.getConnection(url)) {
+	            String query = "SELECT id, description, unitPrice, qtyInStock, totalPrice FROM items WHERE description LIKE ?";
+	            
+	            PreparedStatement ps = connection.prepareStatement(query);
+	            ps.setString(1, "%" + searchQuery + "%");
+	            System.out.println("[INFO] Executing query: " + query.replace("?", "'%" + searchQuery + "%'"));
+
+	            ResultSet resultSet = ps.executeQuery();
+
+	            int count = 0;
+	            while (resultSet.next()) {
+	                int id = resultSet.getInt("id");
+	                String description = resultSet.getString("description");
+	                double unitPrice = resultSet.getDouble("unitPrice");
+	                int qtyInStock = resultSet.getInt("qtyInStock");
+	                double totalPrice = resultSet.getDouble("totalPrice");
+
+	                itemsData.add(new GUI_Items(id, description, unitPrice, qtyInStock, totalPrice));
+	                System.out.println("[INFO] Found Item -> ID: " + id + ", Description: " + description + 
+	                                   ", Unit Price: " + unitPrice + ", Quantity: " + qtyInStock + ", Total Price: " + totalPrice);
+	                count++;
+	            }
+
+	            if (count == 0) {
+	                System.out.println("[INFO] No items found matching query: '" + searchQuery + "'");
+	            } else {
+	                System.out.println("[INFO] Total " + count + " item(s) found matching query.");
+	            }
+	        } catch (SQLException e) {
+	            e.printStackTrace();
+	        }
+
+	        itemsTable.setItems(itemsData);  // Update the TableView with the filtered data
+	    }
+	    
+	    // Reload the transactions table to ensure it's also updated
+	    reloadTransactionsTableData();
+	}
+
 	
 	// This method controls when the message dialogue boxes appear
 	// These indicate to the user using the GUI, whether or not their action
@@ -301,7 +365,8 @@ public class InvMgmt_GUIController {
                     String dateString = resultSet.getString("date");  // Get the date as a String
 
                     // Check if the dateString is null or empty
-                    java.util.Date date = null;
+                    @SuppressWarnings("unused")
+					java.util.Date date = null;
                     if (dateString != null && !dateString.isEmpty()) {
                         // Manually parse the date String into a java.util.Date object
                         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");  // Adjust the format to match your stored date format
@@ -350,7 +415,7 @@ public class InvMgmt_GUIController {
 
         itemsTable.setItems(itemsData);
     }
-
+	
     // The below methods "refresh" the graphical Items and Transactions table on the screen.
     // These are called at the end of every action for the user, whether thats inserting a new item
     // updating the quantity of an old one, or simply deleting it.
